@@ -1,0 +1,20 @@
+import pygame as pg
+
+
+class GridCell:
+    def __init__(self, row, col):
+        self.row = row
+        self.col = col
+        self.empty = True
+
+    def draw(self, screen, x, y, game_position, cell_size):
+        border_color = (150, 150, 150)
+
+        color = (255, 255, 255)
+        if not self.empty:
+            color = (150, 150, 255)
+
+        rect = pg.Rect(game_position.x+x+1, game_position.y+y+1, cell_size-1, cell_size-1)
+        pg.draw.rect(screen, color, rect, 0)
+        pg.draw.rect(screen, border_color, rect, 1)
+
