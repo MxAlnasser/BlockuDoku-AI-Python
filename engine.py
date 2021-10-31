@@ -3,6 +3,8 @@ from GridCell import *
 from class_definitions import *
 import random
 #put shapes in here
+#The shape is a set of coordinates. 
+#I only put this few ones because we want something that works first
 shapes = {
     'T': [(0, 0), (-1, 0), (1, 0), (0, -1)],
     'J': [(0, 0), (-1, 0), (0, -1), (0, -2)],
@@ -55,7 +57,26 @@ class Blockudoku:
 
             #DO TURN LOGIC HERE
             next_shape = self._make_shape(shapes[shapes_keys[random.randint(0,len(shapes_keys)-1)]])
-            print(next_shape)
+            #find out valid positions
+            valid_positions = self._get_valid_locations(next_shape)
+            self.grid_to_matrix()
+
+            ###DECISION LOGIC HERE
+            # valid_position is a list of ALL valid spots
+            # next_shape is the next possible shape 
+            # self.matrix is a boolean array of all filled in spots
+
+
+
+
+
+
+
+
+            #decision needs to be a tuple (row, col)
+            decision = (0,0)
+            ###DECISION LOGIC HERE
+            self._place_shape(next_shape, decision)
 
             # Did the user click the window close button?
             for event in pg.event.get():
@@ -69,7 +90,25 @@ class Blockudoku:
 
         # Done! Time to quit.
         pg.quit()
-    
+
+    ### grid to matrix
+    # This will turn the 2D array of GridCell to a 2D matrix of bools
+    def _grid_to_matrix(self):
+        self.matrix = []
+        for row in self.grid:
+            sub_arr = []
+            for column in row:
+                if column.empty:
+                    sub_arr.append(1)
+                else:
+                    sub_arr.append(0)
+            self.matrix.append(sub_arr)
+
+
+    def _place_shape(self, shape, spot):
+        for piece in shape:
+            self.grid[spot[0] + piece[0]][spot[1] + piece[1]].empty = False
+        
 
     def _get_valid_locations(self, shape):
         valid_placing_points = []
