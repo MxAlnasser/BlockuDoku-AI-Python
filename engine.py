@@ -17,7 +17,7 @@ shapes = {
     'LL': [(0, 0), (1, 0), (2, 0), (0, -1), (0, -2)],
     '.': [(0,0)],
     '..': [(0,0), (0,1)],
-    '|': [(0,0), (0,1), (0,2)]
+    '|': [(0,0), (0,1), (0,2)],
 }
 shapes_keys = list(shapes.keys())
 print(shapes_keys)
@@ -59,15 +59,13 @@ class Blockudoku:
             next_shape = self._make_shape(shapes[shapes_keys[random.randint(0,len(shapes_keys)-1)]])
             #find out valid positions
             valid_positions = self._get_valid_locations(next_shape)
-            self.grid_to_matrix()
+            self._grid_to_matrix()
+
 
             ###DECISION LOGIC HERE
             # valid_position is a list of ALL valid spots
             # next_shape is the next possible shape 
             # self.matrix is a boolean array of all filled in spots
-
-
-
 
 
 
@@ -91,6 +89,49 @@ class Blockudoku:
         # Done! Time to quit.
         pg.quit()
 
+
+    def _check_four_directions(self, point, matrix):
+        edges = 0
+        row = point[0]
+        col = point[1]
+        if row - 1 < 0 or matrix[row - 1][col]:
+            edges += 1
+        elif row + 1 > 8 or matrix[row + 1][col]:
+            edges += 1
+        elif col - 1 < 0 or matrix[row][col - 1]:
+            edges += 1
+        elif col + 1 < 0 or matrix[row][col + 1]:
+            edges += 1
+
+        return edges
+        
+    def _generate_score_array(self, choice, shape):
+        #Array is 4 values returned
+        # 0 block border
+        # 1 block border
+        # 2 block border
+        # 3 block border
+        # 4 block border
+        matrix = self._grid_to_matrix()
+        #place block in that matrix
+        for location in shape:
+            matrix[choice[0] + location[0]][choice[1] + location[1]] = 1
+        array = [0 ,0, 0, 0, 0]
+        #this matrix is easier to traverse
+        for row in range(9):
+            for col in range(9):
+                array[self._check_four_directions((row,col), matrix)] += 1
+        return matrix
+
+
+
+    def _get_next_states(self, shape, grid):
+        next_valid_pos = self._get_valid_locations(shape)
+        states = {}
+        for choice in next_valid_pos:
+            states[choice] = _generate_score_array(choice, shape)
+        return states
+
     ### grid to matrix
     # This will turn the 2D array of GridCell to a 2D matrix of bools
     def _grid_to_matrix(self):
@@ -103,7 +144,6 @@ class Blockudoku:
                 else:
                     sub_arr.append(0)
             self.matrix.append(sub_arr)
-
 
     def _place_shape(self, shape, spot):
         for piece in shape:
