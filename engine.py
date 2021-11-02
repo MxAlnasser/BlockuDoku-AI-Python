@@ -64,7 +64,7 @@ class Blockudoku:
             valid_positions = self._get_valid_locations(next_shape)
             self._grid_to_matrix()
 
-
+            print(next_shape)
             ###DECISION LOGIC HERE
             # valid_position is a list of ALL valid spots
             # next_shape is the next possible shape 
@@ -100,6 +100,9 @@ class Blockudoku:
         edges = 0
         row = point[0]
         col = point[1]
+        if not self.grid[row][col].empty:
+            #this is a block
+            return 5
         if row - 1 < 0 or matrix[row - 1][col]:
             edges += 1
         if row + 1 > 8 or matrix[row + 1][col]:
@@ -122,7 +125,7 @@ class Blockudoku:
         #place block in that matrix
         for location in shape:
             matrix[choice[0] + location[0]][choice[1] + location[1]] = 1
-        array = [0 ,0, 0, 0, 0]
+        array = [0 ,0, 0, 0, 0, 0]
         #this matrix is easier to traverse
         for row in range(9):
             for col in range(9):
@@ -178,11 +181,11 @@ class Blockudoku:
                 return False
             elif col_g + col_s >= 9:
                 return False
-            elif row_g + row_s <= 0:
+            elif row_g + row_s <= -1:
                 return False
-            elif col_g + col_s <= 0:
+            elif col_g + col_s <= -1:
                 return False
-            elif not self.grid[row_g+row_s][col_g+col_s].empty:
+            elif not self.grid[row_g + row_s][col_g + col_s].empty:
                 return False
         return True
 
