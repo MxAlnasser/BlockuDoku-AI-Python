@@ -55,6 +55,9 @@ class Blockudoku:
 
             drawBorders(screen, cell_size, board_loc, board_size)
 
+            # Flip the display
+            pg.display.flip()
+
             #DO TURN LOGIC HERE
             next_shape = self._make_shape(shapes[shapes_keys[random.randint(0,len(shapes_keys)-1)]])
             #find out valid positions
@@ -66,15 +69,19 @@ class Blockudoku:
             # valid_position is a list of ALL valid spots
             # next_shape is the next possible shape 
             # self.matrix is a boolean array of all filled in spots
+            print("Valid positions are: ")
+            print(valid_positions)
 
+            choice = int(input("Where do you want to place the block?"))
+            decision = valid_positions[choice]
 
 
 
 
             #decision needs to be a tuple (row, col)
-            decision = (0,0)
             ###DECISION LOGIC HERE
             self._place_shape(next_shape, decision)
+            print(self._generate_score_array(decision, next_shape))
 
             # Did the user click the window close button?
             for event in pg.event.get():
@@ -83,8 +90,7 @@ class Blockudoku:
 
                 
 
-            # Flip the display
-            pg.display.flip()
+            
 
         # Done! Time to quit.
         pg.quit()
@@ -96,11 +102,11 @@ class Blockudoku:
         col = point[1]
         if row - 1 < 0 or matrix[row - 1][col]:
             edges += 1
-        elif row + 1 > 8 or matrix[row + 1][col]:
+        if row + 1 > 8 or matrix[row + 1][col]:
             edges += 1
-        elif col - 1 < 0 or matrix[row][col - 1]:
+        if col - 1 < 0 or matrix[row][col - 1]:
             edges += 1
-        elif col + 1 < 0 or matrix[row][col + 1]:
+        if col + 1 > 8 or matrix[row][col + 1]:
             edges += 1
 
         return edges
@@ -121,7 +127,7 @@ class Blockudoku:
         for row in range(9):
             for col in range(9):
                 array[self._check_four_directions((row,col), matrix)] += 1
-        return matrix
+        return array
 
 
 
@@ -139,11 +145,12 @@ class Blockudoku:
         for row in self.grid:
             sub_arr = []
             for column in row:
-                if column.empty:
+                if not column.empty:
                     sub_arr.append(1)
                 else:
                     sub_arr.append(0)
             self.matrix.append(sub_arr)
+        return self.matrix
 
     def _place_shape(self, shape, spot):
         for piece in shape:
