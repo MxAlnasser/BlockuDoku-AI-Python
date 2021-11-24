@@ -1,6 +1,6 @@
 import pygame as pg
 from GridCell import *
-from class_definitions import *
+from ClassDefinitions import *
 
 window_size = pg.Vector2(450, 700)
 board_loc = pg.Vector2(1, 90)

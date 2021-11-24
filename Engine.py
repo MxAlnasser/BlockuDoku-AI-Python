@@ -1,6 +1,6 @@
 import pygame as pg
 from GridCell import *
-from class_definitions import *
+from ClassDefinitions import *
 import random
 #put shapes in here
 #The shape is a set of coordinates. 
@@ -138,7 +138,7 @@ class Blockudoku:
         next_valid_pos = self._get_valid_locations(shape)
         states = {}
         for choice in next_valid_pos:
-            states[choice] = _generate_score_array(choice, shape)
+            states[choice] = self._generate_score_array(choice, shape)
         return states
 
     ### grid to matrix
