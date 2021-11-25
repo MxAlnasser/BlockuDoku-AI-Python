@@ -31,9 +31,6 @@ class ShapesStructure:
         self.block1 = {
             "id": BLOCK1,
             "blocks": [(0, 0)],
-            "nBlocks": 1,
-            "width": 1,
-            "height": 1,
             "orientations": 1,
             "name": "Block1"
         }
@@ -41,153 +38,102 @@ class ShapesStructure:
         self.line2 = {
             "id": LINE2,
             "blocks": [(0, 0), (0, 1)],
-            "nBlocks": 2,
-            "width": 1,
-            "height": 2,
             "orientations": 2,
             "name": "Line2"
         }
         self.diagonal2 = {
             "id": DIAGONAL2,
             "blocks": [(0, 0), (1, 1)],
-            "nBlocks": 2,
-            "width": 2,
-            "height": 2,
             "orientations": 2,
             "name": "Diagonal2"
         }
         self.line3 = {
             "id": LINE3,
             "blocks": [(0, 0), (0, 1), (0, 2)],
-            "nBlocks": 3,
-            "width": 1,
-            "height": 3,
             "orientations": 2,
             "name": "Line3"
         }
         self.stairs3 = {
             "id": STAIRS3,
             "blocks": [(0, 0), (0, 1), (1, 1)],
-            "nBlocks": 3,
-            "width": 2,
-            "height": 2,
             "orientations": 4,
             "name": "Stairs3"
         }
         self.diagonal3 = {
             "id": DIAGONAL3,
             "blocks": [(0, 0), (1, 1), (2, 2)],
-            "nBlocks": 3,
-            "width": 3,
-            "height": 3,
             "orientations": 2,
             "name": "Diagonal3"
         }
         self.block4 = {
             "id": BLOCK4,
             "blocks": [(0, 0), (0, 1), (1, 0), (1, 1)],
-            "nBlocks": 4,
-            "width": 2,
-            "height": 2,
             "orientations": 1,
             "name": "Block4"
         }
         self.line4 = {
             "id": LINE4,
             "blocks": [(0, 0), (0, 1), (0, 2), (0, 3)],
-            "nBlocks": 4,
-            "width": 1,
-            "height": 4,
             "orientations": 2,
             "name": "Line4"
         }
         self.l4 = {
             "id": L4,
             "blocks": [(0, 0), (0, 1), (0, 2), (1, 2)],
-            "nBlocks": 4,
-            "width": 2,
-            "height": 3,
             "orientations": 4,
             "name": "L4"
         }
         self.j4 = {
             "id": J4,
             "blocks": [(1, 0), (1, 1), (1, 2), (0, 2)],
-            "nBlocks": 4,
-            "width": 2,
-            "height": 3,
             "orientations": 4,
             "name": "J4"
         }
         self.t4 = {
             "id": T4,
             "blocks": [(0, 0), (1, 0), (2, 0), (1, 1)],
-            "nBlocks": 4,
-            "width": 3,
-            "height": 2,
             "orientations": 4,
             "name": "T4"
         }
         self.s4 = {
             "id": S4,
             "blocks": [(1, 0), (2, 0), (0, 1), (1, 1)],
-            "nBlocks": 4,
-            "width": 3,
-            "height": 2,
             "orientations": 4,
             "name": "S4"
         }
         self.z4 = {
             "id": Z4,
             "blocks": [(0, 0), (1, 0), (1, 1), (2, 1)],
-            "nBlocks": 4,
-            "width": 3,
-            "height": 2,
             "orientations": 4,
             "name": "Z4"
         }
         self.line5 = {
             "id": LINE5,
             "blocks": [(0, 0), (0, 1), (0, 2), (0, 3), (0, 4)],
-            "nBlocks": 5,
-            "width": 1,
-            "height": 5,
             "orientations": 2,
             "name": "Line5"
         }
         self.l5 = {
             "id": L5,
             "blocks": [(0, 0), (0, 1), (0, 2), (1, 2), (2, 2)],
-            "nBlocks": 5,
-            "width": 3,
-            "height": 3,
             "orientations": 4,
             "name": "L5"
         }
         self.t5 = {
             "id": T5,
             "blocks": [(0, 0), (1, 0), (2, 0), (1, 1), (1, 2)],
-            "nBlocks": 5,
-            "width": 3,
-            "height": 3,
             "orientations": 4,
             "name": "T5"
         }
         self.u5 = {
             "id": U5,
             "blocks": [(0, 0), (0, 1), (1, 1), (2, 1), (2, 0)],
-            "nBlocks": 5,
-            "width": 3,
-            "height": 2,
             "orientations": 4,
             "name": "U5"
         }
         self.plus5 = {
             "id": PLUS5,
             "blocks": [(1, 0), (0, 1), (1, 1), (2, 1), (1, 2)],
-            "nBlocks": 5,
-            "width": 3,
-            "height": 3,
             "orientations": 1,
             "name": "Plus5"
         }

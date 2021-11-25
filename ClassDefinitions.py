@@ -9,7 +9,7 @@ class loc:
 def drawCells(screen, grid, cell_size, board_loc):
     for r in range(9):
         for c in range(9):
-            grid[r][c].draw(screen, c * cell_size, r * cell_size, board_loc, cell_size);
+            grid[r][c].draw(screen, board_loc, cell_size)
 
 
 def drawBorders(screen, cell_size, board_loc, board_size):
