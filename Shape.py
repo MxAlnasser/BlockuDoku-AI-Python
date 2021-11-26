@@ -66,24 +66,9 @@ class Shape:
         for block_i in range(len(self.blocks)):
             self.blocks[block_i] = (self.blocks[block_i][0]-minRow, self.blocks[block_i][1]-minCol)
 
-
-    def moveLeft(self):
-        if self.col > 0:
-            self.col -= 1
-            return True
-        else:
-            return False
-
     def moveRight(self):
         if self.col + self.width < 9:
             self.col += 1
-            return True
-        else:
-            return False
-
-    def moveUp(self):
-        if self.row > 0:
-            self.row -= 1
             return True
         else:
             return False
@@ -95,14 +80,33 @@ class Shape:
         else:
             return False
 
-    def place(self, grid):
+    def moveLeft(self):
+        if self.col > 0:
+            self.col -= 1
+            return True
+        else:
+            return False
 
+    def moveUp(self):
+        if self.row > 0:
+            self.row -= 1
+            return True
+        else:
+            return False
+
+    def isPlaceable(self, grid):
         # check if the shape is placeble
         for block in self.blocks:
             block_row = self.row + block[0]
             block_col = self.col + block[1]
             if not grid[block_row][block_col].empty:
                 return False
+        return True
+
+    def place(self, grid):
+
+        if not self.isPlaceable(grid):
+            return False
 
         # place the shape
         self.placed = True
