@@ -137,7 +137,7 @@ for e in range(EPISODES):
     for time in range(210): #200 is when you "solve" the game. This can continue forever as far as I know
         action = dqn.action(state)
         nstate, reward, done = game.step(action)
-        game.drawGameHeadless(screen)
+        game.drawGame(screen)
         nstate = np.reshape(nstate, [1, nS])
         tot_rewards += reward
         dqn.store(state, action, reward, nstate, done) # Resize to store in memory to pass to .predict
@@ -152,7 +152,7 @@ for e in range(EPISODES):
         #Experience Replay
         if len(dqn.memory) > batch_size():
             dqn.experience_replay(batch_size())
-    game.restart()
+    game.reset()
     #Update the weights after each episode (You can configure this for x steps as well
     dqn.update_target_from_model()
     #If our current NN passes we are done

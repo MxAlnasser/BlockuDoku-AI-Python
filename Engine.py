@@ -7,10 +7,11 @@ import random
 import numpy as np
 import time
 
-MOVEMENT_PUNISHMENT = -1
+MOVEMENT_PUNISHMENT = -10
 INVALID_MOVEMENT_PUNISHMENT = -10
 INVALID_PLACEMENT_PUNISHMENT = -20
 LOSE_PUNISHMENT = 0
+REWARD_PLACEMENT = 30
 
 
 class Blockudoku:
@@ -25,7 +26,8 @@ class Blockudoku:
         self.score = 0
         self.cleared_recently = False
         self.lost = False
-        self.state = np.zeros((2, 9, 9))
+        self.state = np.zeros((9, 9, 2))
+        self.n_actions = 5
         # possible states:
         # * invalid cells
         # * blocks that will be cleared if shape is placed
@@ -37,6 +39,7 @@ class Blockudoku:
                 self.grid[r].append(GridCell(r, c))
 
         self.current_shape = Shape()
+        self._calculateState()
 
     def reset(self):
         self.score = 0
@@ -46,7 +49,7 @@ class Blockudoku:
         for row in range(9):
             for col in range(9):
                 self.grid[row][col].empty = True
-        self.state = np.zeros((2, 9, 9))
+        self.state = np.zeros(self.state.shape)
         self._calculateState()
         return self.state
 
@@ -86,6 +89,10 @@ class Blockudoku:
     def drawGameHeadless(self, screen):
         running = True
 
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                running = False
+
         screen.fill((255, 255, 255))
 
         self._drawCells(screen, self.grid, self.cell_size, self.board_loc)
@@ -101,7 +108,7 @@ class Blockudoku:
         if action == 0:  # place
             valid = self.current_shape.place(self.grid)
             if valid:
-                reward = self._blockPlaced()
+                reward = self._blockPlaced() + REWARD_PLACEMENT
             else:
                 reward = INVALID_PLACEMENT_PUNISHMENT
 
@@ -128,14 +135,14 @@ class Blockudoku:
         for row in range(9):
             for col in range(9):
                 if self.grid[row][col].empty:
-                    self.state[0][row][col] = 0
+                    self.state[row][col][0] = 0
                 else:
-                    self.state[0][row][col] = 1
+                    self.state[row][col][0] = 1
 
         # layer 2: current shape
-        self.state[1] = np.zeros(self.state[1].shape)
+        self.state[:, :, 1] = np.zeros(self.state[:, :, 1].shape)
         for block in self.current_shape.blocks:
-            self.state[1][self.current_shape.row + block[0]][self.current_shape.col + block[1]] = 1
+            self.state[self.current_shape.row + block[0]][self.current_shape.col + block[1]][1] = 1
 
     def _scoreBoard(self):
         cleared_blocks = []
