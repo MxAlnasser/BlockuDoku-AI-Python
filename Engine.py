@@ -38,15 +38,17 @@ class Blockudoku:
 
         self.current_shape = Shape()
 
-    def restart(self):
+    def reset(self):
         self.score = 0
         self.cleared_recently = False
         self.lost = False
-        self.state = np.zeros((2, 9, 9))
         self.current_shape = Shape()
         for row in range(9):
             for col in range(9):
                 self.grid[row][col].empty = True
+        self.state = np.zeros((2, 9, 9))
+        self._calculateState()
+        return self.state
 
     def drawGame(self, screen):
         running = True
@@ -221,14 +223,14 @@ class Blockudoku:
         pg.draw.rect(screen, color, rect, 3)
 
 
-game = Blockudoku(69)
-
-pg.init()
-
-screen = pg.display.set_mode([game.window_size.x, game.window_size.y])
-
-running = True
-while running:
-    running = game.drawGame(screen)
-
-pg.quit()
+# game = Blockudoku(69)
+#
+# pg.init()
+#
+# screen = pg.display.set_mode([game.window_size.x, game.window_size.y])
+#
+# running = True
+# while running:
+#     running = game.drawGame(screen)
+#
+# pg.quit()
