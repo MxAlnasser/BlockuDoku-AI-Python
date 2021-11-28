@@ -80,6 +80,20 @@ class Blockudoku:
         pg.display.flip()
 
         return running
+    
+    def drawGameHeadless(self, screen):
+        running = True
+
+        screen.fill((255, 255, 255))
+
+        self._drawCells(screen, self.grid, self.cell_size, self.board_loc)
+        self.current_shape.draw(screen, self.board_loc, self.cell_size, self.grid)
+        self._drawBorders(screen, self.cell_size, self.board_loc, self.board_size)
+        self._displayScore(screen)
+
+        pg.display.flip()
+
+        return running
 
     def step(self, action):
         if action == 0:  # place
@@ -220,15 +234,14 @@ class Blockudoku:
         rect = pg.Rect(board_loc.x, board_loc.y, board_size.x, board_size.y)
         pg.draw.rect(screen, color, rect, 3)
 
+#game = Blockudoku(69)
 
-game = Blockudoku(69)
+#pg.init()
 
-pg.init()
+#screen = pg.display.set_mode([game.window_size.x, game.window_size.y])
 
-screen = pg.display.set_mode([game.window_size.x, game.window_size.y])
+#running = True
+#while running:
+#    running = game.drawGame(screen)
 
-running = True
-while running:
-    running = game.drawGame(screen)
-
-pg.quit()
+#pg.quit()
