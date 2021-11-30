@@ -19,6 +19,7 @@ PLUS5 = 17
 
 TOTAL_SHAPES = 18
 
+
 class ShapesStructure:
     def __init__(self):
         self.setShapesIDs()

@@ -7,17 +7,27 @@ import random
 import numpy as np
 import time
 
-MOVEMENT_PUNISHMENT = -10
+MOVEMENT_PUNISHMENT = -1
 INVALID_MOVEMENT_PUNISHMENT = -10
-INVALID_PLACEMENT_PUNISHMENT = -20
+INVALID_PLACEMENT_PUNISHMENT = -10
 LOSE_PUNISHMENT = 0
-REWARD_PLACEMENT = 30
+REWARD_PLACEMENT = 10
+
+class Space:
+
+    def __init__(self, n, sample):
+        self.n = n
+        self.sampleV = sample
+
+    def sample(self):
+        return self.sampleV
+
 
 
 class Blockudoku:
 
-    def __init__(self, seed):
-        random.seed(seed)
+    def __init__(self):
+        self.screen = None
         self.window_size = pg.Vector2(450, 700)
         self.board_loc = pg.Vector2(1, 90)
         self.board_size = pg.Vector2(self.window_size.x - 2, self.window_size.x)
@@ -27,11 +37,6 @@ class Blockudoku:
         self.cleared_recently = False
         self.lost = False
         self.state = np.zeros((9, 9, 2))
-        self.n_actions = 5
-        # possible states:
-        # * invalid cells
-        # * blocks that will be cleared if shape is placed
-        # * cells' boarders
 
         for r in range(9):
             self.grid.append([])
@@ -40,6 +45,22 @@ class Blockudoku:
 
         self.current_shape = Shape()
         self._calculateState()
+
+        self.action_space = Space(5, 0)
+        self.observation_space = Space(2**len(self.state), self.state)
+
+        # possible states:
+        # * invalid cells
+        # * blocks that will be cleared if shape is placed
+        # * cells' boarders
+
+
+    def seed(self, seed):
+        random.seed(seed)
+
+
+    def setScreen(self, screen):
+        self.screen = screen
 
     def reset(self):
         self.score = 0
@@ -53,7 +74,7 @@ class Blockudoku:
         self._calculateState()
         return self.state
 
-    def drawGame(self, screen):
+    def play(self):
         running = True
 
         for event in pg.event.get():
@@ -62,7 +83,7 @@ class Blockudoku:
 
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_r:
-                    self.restart()
+                    self.reset()
                 if event.key == pg.K_SPACE:
                     self.step(0)
                 if event.key == pg.K_RIGHT:
@@ -73,32 +94,67 @@ class Blockudoku:
                     self.step(3)
                 if event.key == pg.K_UP:
                     self.step(4)
-                self.drawGame(screen)
 
-        screen.fill((255, 255, 255))
+        self.screen.fill((255, 255, 255))
 
-        self._drawCells(screen, self.grid, self.cell_size, self.board_loc)
-        self.current_shape.draw(screen, self.board_loc, self.cell_size, self.grid)
-        self._drawBorders(screen, self.cell_size, self.board_loc, self.board_size)
-        self._displayScore(screen)
+        self._drawCells(self.screen, self.grid, self.cell_size, self.board_loc)
+        self.current_shape.draw(self.screen, self.board_loc, self.cell_size, self.grid)
+        self._drawBorders(self.screen, self.cell_size, self.board_loc, self.board_size)
+        self._displayScore(self.screen)
 
         pg.display.flip()
 
         return running
-    
-    def drawGameHeadless(self, screen):
+
+    def render(self, mode='human'):
+        board = np.zeros((9, 9))
+
+        for row in range(9):
+            for col in range(9):
+                if not self.grid[row][col].empty:
+                    board[row][col] = 1
+
+        for block in self.current_shape.blocks:
+            b_row = self.current_shape.row+block[0]
+            b_col = self.current_shape.col+block[1]
+            if board[b_row][b_col] == 0:
+                board[b_row][b_col] = 2
+            else:
+                board[b_row][b_col] = 3
+
+        for row in range(9):
+            if row % 3 == 0:
+                print("+-----+-----+-----+")
+            for col in range(9):
+                if col % 3 == 0:
+                    print("|", end="")
+                else:
+                    print(":", end="")
+                if board[row][col] == 0:
+                    print(" ", end="")
+                elif board[row][col] == 1:
+                    print("\033[0;30;44m ", end="\033[0;0m")
+                elif board[row][col] == 2:
+                    print("\033[0;30;42m ", end="\033[0;0m")
+                else:
+                    print("\033[0;30;41m ", end="\033[0;0m")
+            print("|")
+
+        print("+-----+-----+-----+")
+
+    def drawGameHeadless(self):
         running = True
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 running = False
 
-        screen.fill((255, 255, 255))
+        self.screen.fill((255, 255, 255))
 
-        self._drawCells(screen, self.grid, self.cell_size, self.board_loc)
-        self.current_shape.draw(screen, self.board_loc, self.cell_size, self.grid)
-        self._drawBorders(screen, self.cell_size, self.board_loc, self.board_size)
-        self._displayScore(screen)
+        self._drawCells(self.screen, self.grid, self.cell_size, self.board_loc)
+        self.current_shape.draw(self.screen, self.board_loc, self.cell_size, self.grid)
+        self._drawBorders(self.screen, self.cell_size, self.board_loc, self.board_size)
+        self._displayScore(self.screen)
 
         pg.display.flip()
 
@@ -128,7 +184,7 @@ class Blockudoku:
                 reward = INVALID_MOVEMENT_PUNISHMENT
 
         self._calculateState()
-        return self.state, reward, self.lost
+        return self.state, reward, self.lost, {}
 
     def _calculateState(self):
         # layer 1: filled cells
@@ -244,15 +300,19 @@ class Blockudoku:
         pg.draw.rect(screen, color, rect, 3)
 
 
-# game = Blockudoku(69)
+# game = Blockudoku()
 #
 # pg.init()
 #
 # screen = pg.display.set_mode([game.window_size.x, game.window_size.y])
 #
+# game.seed(69)
+# game.setScreen(screen)
+
+
 # running = True
 # while running:
-#     running = game.drawGame(screen)
-#
+#     running = game.renderText(screen)
+
 # pg.quit()
 
