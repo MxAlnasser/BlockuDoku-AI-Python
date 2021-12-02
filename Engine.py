@@ -13,6 +13,7 @@ INVALID_PLACEMENT_PUNISHMENT = -10
 LOSE_PUNISHMENT = 0
 REWARD_PLACEMENT = 10
 
+
 class Space:
 
     def __init__(self, n, sample):
@@ -21,7 +22,6 @@ class Space:
 
     def sample(self):
         return self.sampleV
-
 
 
 class Blockudoku:
@@ -47,17 +47,15 @@ class Blockudoku:
         self._calculateState()
 
         self.action_space = Space(5, 0)
-        self.observation_space = Space(2**len(self.state), self.state)
+        self.observation_space = Space(2 ** len(self.state), self.state)
 
         # possible states:
         # * invalid cells
         # * blocks that will be cleared if shape is placed
         # * cells' boarders
 
-
     def seed(self, seed):
         random.seed(seed)
-
 
     def setScreen(self, screen):
         self.screen = screen
@@ -115,8 +113,8 @@ class Blockudoku:
                     board[row][col] = 1
 
         for block in self.current_shape.blocks:
-            b_row = self.current_shape.row+block[0]
-            b_col = self.current_shape.col+block[1]
+            b_row = self.current_shape.row + block[0]
+            b_col = self.current_shape.col + block[1]
             if board[b_row][b_col] == 0:
                 board[b_row][b_col] = 2
             else:
@@ -141,6 +139,9 @@ class Blockudoku:
             print("|")
 
         print("+-----+-----+-----+")
+
+        if self.screen is not None:
+            self.drawGameHeadless()
 
     def drawGameHeadless(self):
         running = True
@@ -231,7 +232,7 @@ class Blockudoku:
                 cleared = True
                 for row in range(3):
                     for col in range(3):
-                        if self.grid[square_row+row][square_col+col].empty:
+                        if self.grid[square_row + row][square_col + col].empty:
                             cleared = False
                             break
 
@@ -239,7 +240,7 @@ class Blockudoku:
 
                     for row in range(3):
                         for col in range(3):
-                            cleared_blocks.append(self.grid[square_row+row][square_col+col])
+                            cleared_blocks.append(self.grid[square_row + row][square_col + col])
 
         # give score
         reward = 0
@@ -299,7 +300,6 @@ class Blockudoku:
         rect = pg.Rect(board_loc.x, board_loc.y, board_size.x, board_size.y)
         pg.draw.rect(screen, color, rect, 3)
 
-
 # game = Blockudoku()
 #
 # pg.init()
@@ -315,4 +315,3 @@ class Blockudoku:
 #     running = game.renderText(screen)
 
 # pg.quit()
-
